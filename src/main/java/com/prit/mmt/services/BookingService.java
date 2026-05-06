@@ -25,7 +25,7 @@ public class BookingService {
     @Autowired
     private HotelRepository hotelRepository;
 
-    public Users bookFlight(String userId, String flightId, int seats, double price) {
+    public Users bookFlight(String userId, String flightId, int seats, double price, String selectedSeat) {
         Optional<Users> usersOptional = userRepository.findById(userId);
         Optional<Flight> flightOptional = flightRepository.findById(flightId);
         if (usersOptional.isPresent() && flightOptional.isPresent()) {
@@ -36,15 +36,17 @@ public class BookingService {
                 flightRepository.save(flight);
 
                 Booking booking = new Booking();
-                booking.setId(UUID.randomUUID().toString()); // Generate unique ID
+                booking.setId(UUID.randomUUID().toString());
                 booking.setType("Flight");
                 booking.setBookingId(flightId);
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(seats);
                 booking.setTotalPrice(price);
                 booking.setStatus("CONFIRMED");
+                booking.setSelectedSeat(selectedSeat); // Save Seat
+
                 user.getBookings().add(booking);
-                return userRepository.save(user); // Return updated User
+                return userRepository.save(user);
             } else {
                 throw new RuntimeException("Not enough seats available");
             }
@@ -52,7 +54,7 @@ public class BookingService {
         throw new RuntimeException("User or flight not found");
     }
 
-    public Users bookhotel(String userId, String hotelId, int rooms, double price) {
+    public Users bookhotel(String userId, String hotelId, int rooms, double price, String selectedRoom) {
         Optional<Users> usersOptional = userRepository.findById(userId);
         Optional<Hotel> hotelOptional = hotelRepository.findById(hotelId);
         if (usersOptional.isPresent() && hotelOptional.isPresent()) {
@@ -63,15 +65,17 @@ public class BookingService {
                 hotelRepository.save(hotel);
 
                 Booking booking = new Booking();
-                booking.setId(UUID.randomUUID().toString()); // Generate unique ID
+                booking.setId(UUID.randomUUID().toString());
                 booking.setType("Hotel");
                 booking.setBookingId(hotelId);
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(rooms);
                 booking.setTotalPrice(price);
                 booking.setStatus("CONFIRMED");
+                booking.setSelectedRoom(selectedRoom); // Save Room
+
                 user.getBookings().add(booking);
-                return userRepository.save(user); // Return updated User
+                return userRepository.save(user);
             } else {
                 throw new RuntimeException("Not enough rooms available");
             }
@@ -87,12 +91,9 @@ public class BookingService {
             if (uniqueBookingId.equals(booking.getId()) && !"CANCELLED".equals(booking.getStatus())) {
                 booking.setStatus("CANCELLED");
                 booking.setCancellationReason(reason);
-
-                // Calculate 50% Refund
                 booking.setRefundAmount(booking.getTotalPrice() * 0.5);
                 booking.setRefundStatus("PENDING");
 
-                // Restore Inventory based on type
                 if ("Flight".equalsIgnoreCase(booking.getType())) {
                     flightRepository.findById(booking.getBookingId()).ifPresent(flight -> {
                         flight.setAvailableSeats(flight.getAvailableSeats() + booking.getQuantity());

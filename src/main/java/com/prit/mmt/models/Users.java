@@ -34,18 +34,22 @@ public class Users {
     public void setBookings(List<Booking> bookings) { this.bookings = bookings; }
 
     public static class Booking {
-        private String id; // Unique ID for this specific booking instance
+        private String id;
         private String type;
         private String bookingId;
         private String date;
         private int quantity;
         private double totalPrice;
 
+        // --- NEW FIELDS FOR SEAT/ROOM SELECTION ---
+        private String selectedSeat;
+        private String selectedRoom;
+
         // Cancellation & Refund Fields
-        private String status = "CONFIRMED"; // CONFIRMED or CANCELLED
+        private String status = "CONFIRMED";
         private String cancellationReason;
         private double refundAmount;
-        private String refundStatus; // PENDING, PROCESSED, COMPLETED
+        private String refundStatus;
 
         // Getters and Setters
         public String getId() { return id; }
@@ -65,6 +69,12 @@ public class Users {
 
         public double getTotalPrice() { return totalPrice; }
         public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
+
+        public String getSelectedSeat() { return selectedSeat; }
+        public void setSelectedSeat(String selectedSeat) { this.selectedSeat = selectedSeat; }
+
+        public String getSelectedRoom() { return selectedRoom; }
+        public void setSelectedRoom(String selectedRoom) { this.selectedRoom = selectedRoom; }
 
         public String getStatus() { return status; }
         public void setStatus(String status) { this.status = status; }
