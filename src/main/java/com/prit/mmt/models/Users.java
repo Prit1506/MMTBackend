@@ -88,4 +88,30 @@ public class Users {
         public String getRefundStatus() { return refundStatus; }
         public void setRefundStatus(String refundStatus) { this.refundStatus = refundStatus; }
     }
+
+    // Add this inside your Users class, next to the Booking class
+    private List<PriceFreeze> priceFreezes = new ArrayList<>();
+
+    public List<PriceFreeze> getPriceFreezes() { return priceFreezes; }
+    public void setPriceFreezes(List<PriceFreeze> priceFreezes) { this.priceFreezes = priceFreezes; }
+
+    public static class PriceFreeze {
+        private String freezeId;
+        private String targetId; // Flight ID or Hotel ID
+        private String type; // "FLIGHT" or "HOTEL"
+        private double lockedPrice;
+        private long expiryTimestamp; // Unix timestamp for when the freeze expires
+
+        // Getters and Setters
+        public String getFreezeId() { return freezeId; }
+        public void setFreezeId(String freezeId) { this.freezeId = freezeId; }
+        public String getTargetId() { return targetId; }
+        public void setTargetId(String targetId) { this.targetId = targetId; }
+        public String getType() { return type; }
+        public void setType(String type) { this.type = type; }
+        public double getLockedPrice() { return lockedPrice; }
+        public void setLockedPrice(double lockedPrice) { this.lockedPrice = lockedPrice; }
+        public long getExpiryTimestamp() { return expiryTimestamp; }
+        public void setExpiryTimestamp(long expiryTimestamp) { this.expiryTimestamp = expiryTimestamp; }
+    }
 }

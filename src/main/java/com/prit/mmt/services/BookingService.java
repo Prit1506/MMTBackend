@@ -110,4 +110,23 @@ public class BookingService {
         }
         throw new RuntimeException("Booking not found or already cancelled");
     }
+
+    // Add this to your BookingService.java
+    public Users freezePrice(String userId, String targetId, String type, double lockedPrice) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Users.PriceFreeze freeze = new Users.PriceFreeze();
+        freeze.setFreezeId(UUID.randomUUID().toString());
+        freeze.setTargetId(targetId);
+        freeze.setType(type); // "FLIGHT" or "HOTEL"
+        freeze.setLockedPrice(lockedPrice);
+        // Set expiry to exactly 24 hours from right now
+        freeze.setExpiryTimestamp(System.currentTimeMillis() + (24 * 60 * 60 * 1000));
+
+        user.getPriceFreezes().add(freeze);
+
+        // Save the updated user back to MongoDB
+        return userRepository.save(user);
+    }
 }

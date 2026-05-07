@@ -2,7 +2,7 @@ package com.prit.mmt.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "flight")
+@Document(collection = "flights")
 public class Flight {
     @Id
     private String _id;

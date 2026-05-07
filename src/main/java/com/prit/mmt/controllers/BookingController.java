@@ -26,4 +26,14 @@ public class BookingController {
     public Users cancelBooking(@RequestParam String userId, @RequestParam String bookingId, @RequestParam String reason) {
         return bookingService.cancelBooking(userId, bookingId, reason);
     }
+
+    // Add this to your BookingController.java
+    @PostMapping("/freeze")
+    public Users freezePrice(
+            @RequestParam String userId,
+            @RequestParam String targetId,
+            @RequestParam String type,
+            @RequestParam double price) {
+        return bookingService.freezePrice(userId, targetId, type, price);
+    }
 }
